@@ -121,7 +121,7 @@ group-local and that public batches do not have to devolve into per-frame
 fsyncs. It is not a substitute for the production OpenRaft log, snapshots, or a
 production group-commit policy.
 
-`ursula-http --wal-dir DIR` wires this optional engine into the HTTP prototype.
+`ursula --wal-dir DIR` wires this optional engine into the HTTP prototype.
 The flag is explicit so normal in-memory throughput smokes keep their existing
 shape, while durability/recovery smokes can use the same protocol surface.
 
@@ -234,7 +234,7 @@ starts three Ursula HTTP routers, warms four groups on each node, initializes
 node 1 with three voters for every group, writes streams placed on all four
 groups through node 1, and waits until the replicated payloads are readable
 from every runtime.
-`ursula-http` now
+`ursula` now
 exposes this static cluster shape with `--raft-memory --raft-node-id ID
 --raft-peer ID=URL ... --raft-init-membership`, or with a JSON
 `--raft-cluster-config FILE` containing `node_id`, `peers`, and
@@ -280,10 +280,10 @@ production work still needs an indexed/high-throughput OpenRaft log format,
 dynamic deployment membership management, and long-running EC2
 conformance/performance validation of the multi-group static cluster path.
 
-`ursula-http --raft-memory` selects the OpenRaft group-engine factory with the
+`ursula --raft-memory` selects the OpenRaft group-engine factory with the
 in-memory `RaftGroupLogStore`. That path lets the HTTP subset drive OpenRaft
 `client_write` without local WAL persistence, which is the right benchmark mode
-when isolating OpenRaft/runtime overhead from disk durability. `ursula-http
+when isolating OpenRaft/runtime overhead from disk durability. `ursula
 --raft-log-dir DIR` selects the durable OpenRaft group-engine factory and adds
 group-local file-log persistence through the same shard-owned runtime boundary.
 The static gRPC cluster path can now use the same durable log backend by
@@ -303,7 +303,7 @@ independent durable journals share a cold store, the leader writes and batch
 flushes cold metadata, and every node's Raft state machine reads the complete
 payload through the replicated cold manifest while retaining a non-empty core
 journal. `cli_static_grpc_raft_log_dir_replicates_cold_manifest` repeats the
-durable cold-manifest flow through real `ursula-http` processes, static cluster
+durable cold-manifest flow through real `ursula` processes, static cluster
 JSON files, independent `--raft-log-dir` roots, and a shared
 `URSULA_COLD_BACKEND=fs` root, and explicitly flushes until `cold_hot_bytes`
 reaches zero before readback. `cli_static_grpc_raft_log_dir_recovers_cold_manifest_after_restart`
@@ -320,7 +320,7 @@ test repeats that shape with real S3 cold storage and cleans up the unique S3
 root after readback. The binary also exposes narrow Raft admin endpoints under
 `/__ursula/raft/{group}` for validation workflows: trigger snapshot, trigger
 purge, and add a learner. `cli_static_grpc_raft_log_dir_installs_snapshot_for_late_learner`
-uses only real `ursula-http` processes plus those endpoints to prove a late
+uses only real `ursula` processes plus those endpoints to prove a late
 third node installs the leader snapshot after the leader has snapshotted and
 purged its log. The
 same late-learner snapshot TCP flow also runs in a durable variant,
@@ -329,11 +329,11 @@ forces leader snapshot and purge, adds a previously absent learner over gRPC,
 waits for snapshot installation, reads the restored stream through the learner
 HTTP endpoint, and verifies non-empty core journals on leader, follower, and
 learner. The binary-level `cli_static_grpc_raft_log_dir_recovers_after_restart`
-test covers the same public `ursula-http` CLI used in EC2 deployment: static
+test covers the same public `ursula` CLI used in EC2 deployment: static
 cluster JSON config, `--raft-log-dir`, HTTP write, process restart without
 reinitializing membership, and HTTP readback from the recovered journal.
 `cli_static_grpc_raft_log_dir_replicates_between_nodes` extends that binary
-coverage to three real `ursula-http` processes with independent log dirs,
+coverage to three real `ursula` processes with independent log dirs,
 leader write, follower readback, and non-empty `journal.bin` files for every
 node. This is correctness and durability scaffolding, not a
 throughput-optimized log layout. The same static durable-log/S3 shape now has a
@@ -386,7 +386,7 @@ semantic tests on the same transition code.
 
 ## HTTP Prototype
 
-`crates/ursula-http` is the first protocol adapter over the shard-owned
+`crates/ursula` is the first protocol adapter over the shard-owned
 runtime. It uses axum on Tokio and intentionally implements only the subset
 needed to put the runtime under a real HTTP workload:
 
@@ -421,10 +421,10 @@ fsync/replication latency and, for 1-byte cold flush, cold-manifest
 write-amplification. This is why EC2 and in-memory Raft-log conformance remain
 the current gates for multi-node protocol behavior, while local durable-log
 runs are treated as latency diagnostics.
-A separate `ursula-http-raw` diagnostic binary implements only the
+A separate `ursula-raw` diagnostic binary implements only the
 `perf_compare` create and append-batch subset over the same runtime. It exists
 to test ingress overhead and is not a replacement for the protocol adapter.
-The normal `ursula-http` binary can also be launched with `--raft-memory` for
+The normal `ursula` binary can also be launched with `--raft-memory` for
 the OpenRaft in-memory log engine, `--wal-dir DIR` for the diagnostic per-group
 WAL engine, or `--raft-log-dir DIR` for the OpenRaft-backed file-log engine.
 These modes keep protocol handling in the same HTTP adapter while changing only

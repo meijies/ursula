@@ -423,5 +423,5 @@ impl Args {
 }
 
 fn help() -> String {
-    "usage: ursula-http-raw [--listen ADDR] [--core-count N] [--raft-group-count N]".to_owned()
+    "usage: ursula-raw [--listen ADDR] [--core-count N] [--raft-group-count N]".to_owned()
 }

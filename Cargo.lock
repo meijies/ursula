@@ -2865,26 +2865,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ursula-bench"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "bytes",
- "clap",
- "futures",
- "hdrhistogram",
- "rand 0.8.6",
- "reqwest",
- "serde",
- "serde_json",
- "tokio",
- "tokio-stream",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "ursula-http"
+name = "ursula"
 version = "0.1.0"
 dependencies = [
  "axum 0.8.9",
@@ -2902,6 +2883,25 @@ dependencies = [
  "ursula-raft",
  "ursula-runtime",
  "ursula-shard",
+]
+
+[[package]]
+name = "ursula-bench"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "bytes",
+ "clap",
+ "futures",
+ "hdrhistogram",
+ "rand 0.8.6",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]

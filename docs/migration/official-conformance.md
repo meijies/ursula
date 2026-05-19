@@ -29,7 +29,7 @@ runConformanceTests({ baseUrl })
 Run Ursula in the in-memory OpenRaft path:
 
 ```bash
-cargo run -p ursula-http --bin ursula-http -- \
+cargo run -p ursula --bin ursula -- \
   --listen 127.0.0.1:4477 \
   --core-count 4 \
   --raft-group-count 32 \
@@ -69,7 +69,7 @@ URSULA_COLD_FLUSH_MIN_HOT_BYTES=1 \
 URSULA_COLD_FLUSH_MAX_BYTES=1 \
 URSULA_COLD_FLUSH_MAX_CONCURRENCY=4 \
 URSULA_COLD_MAX_HOT_BYTES_PER_GROUP=67108864 \
-cargo run -p ursula-http --bin ursula-http -- \
+cargo run -p ursula --bin ursula -- \
   --listen 127.0.0.1:4478 \
   --core-count 4 \
   --raft-group-count 32 \
@@ -175,12 +175,12 @@ correctness through durable OpenRaft log persistence:
 
 ```bash
 CARGO_TARGET_DIR=/tmp/ursula-conformance-target \
-cargo build -p ursula-http --bin ursula-http
+cargo build -p ursula --bin ursula
 
 URSULA_COLD_BACKEND=memory \
 URSULA_COLD_FLUSH_INTERVAL_MS=0 \
 URSULA_COLD_MAX_HOT_BYTES_PER_GROUP=67108864 \
-/tmp/ursula-conformance-target/debug/ursula-http \
+/tmp/ursula-conformance-target/debug/ursula \
   --listen 127.0.0.1:4480 \
   --core-count 4 \
   --raft-group-count 32 \
@@ -298,7 +298,7 @@ cluster path rather than a single-process runtime proxy:
 ```bash
 URSULA_COLD_BACKEND=memory \
 URSULA_COLD_FLUSH_INTERVAL_MS=0 \
-target/debug/ursula-http \
+target/debug/ursula \
   --listen 127.0.0.1:4481 \
   --core-count 4 \
   --raft-group-count 32 \
@@ -433,7 +433,7 @@ URSULA_COLD_FLUSH_MIN_HOT_BYTES=1
 URSULA_COLD_FLUSH_MAX_BYTES=1024
 URSULA_COLD_FLUSH_MAX_CONCURRENCY=4
 URSULA_COLD_MAX_HOT_BYTES_PER_GROUP=67108864
-target/debug/ursula-http \
+target/debug/ursula \
   --listen 127.0.0.1:4491 \
   --core-count 4 \
   --raft-group-count 32 \
@@ -504,7 +504,7 @@ Earlier checkpoints during the same audit:
   `300 passed / 300`.
 - After changing cold flush planning to coalesce contiguous hot segments before
   applying `min_hot_bytes`, reran the official suite against current local
-  `ursula-http --raft-memory` with `URSULA_COLD_BACKEND=memory`,
+  `ursula --raft-memory` with `URSULA_COLD_BACKEND=memory`,
   `URSULA_COLD_FLUSH_INTERVAL_MS=1`, `URSULA_COLD_FLUSH_MIN_HOT_BYTES=1`,
   `URSULA_COLD_FLUSH_MAX_BYTES=1024`, and
   `URSULA_COLD_FLUSH_MAX_CONCURRENCY=4`: `300 passed / 300` in 16.54s.
@@ -630,7 +630,7 @@ integration has also passed locally and on `ursula-c7g-beast-node-1` against
 the real `riverrun-e2e-us-east-1` bucket, covering actual object upload, range
 read, manifest readback, metrics, and cleanup. A gated binary-level S3
 integration has also passed locally against `ursula-c7g-beast-us-east-1`: it
-starts three real `ursula-http` processes with independent `--raft-log-dir`
+starts three real `ursula` processes with independent `--raft-log-dir`
 roots, replicates a cold manifest to S3, flushes until hot bytes reach zero,
 stops and restarts every node without reinitializing membership, reads the
 S3-backed stream through a restarted follower, and cleans up the unique S3

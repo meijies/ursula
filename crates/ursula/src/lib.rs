@@ -4992,7 +4992,7 @@ mod tests {
     #[tokio::test]
     async fn wal_runtime_recovers_http_stream_after_restart() {
         let wal_root = std::env::temp_dir().join(format!(
-            "ursula-http-wal-test-{}-{}",
+            "ursula-wal-test-{}-{}",
             std::process::id(),
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
@@ -5078,7 +5078,7 @@ mod tests {
     #[tokio::test]
     async fn raft_runtime_serves_http_subset_and_writes_core_journal() {
         let raft_root = std::env::temp_dir().join(format!(
-            "ursula-http-raft-test-{}-{}",
+            "ursula-raft-test-{}-{}",
             std::process::id(),
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
@@ -5170,7 +5170,7 @@ mod tests {
     #[tokio::test]
     async fn static_grpc_raft_runtime_can_use_core_journal() {
         let raft_root = std::env::temp_dir().join(format!(
-            "ursula-http-static-raft-log-test-{}-{}",
+            "ursula-static-raft-log-test-{}-{}",
             std::process::id(),
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
@@ -5289,7 +5289,7 @@ mod tests {
     #[tokio::test]
     async fn static_grpc_raft_runtime_recovers_from_core_journal_after_restart() {
         let raft_root = std::env::temp_dir().join(format!(
-            "ursula-http-static-raft-log-restart-test-{}-{}",
+            "ursula-static-raft-log-restart-test-{}-{}",
             std::process::id(),
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
@@ -5911,7 +5911,7 @@ mod tests {
         }
 
         let raft_root = std::env::temp_dir().join(format!(
-            "ursula-http-static-raft-multinode-log-test-{}-{}",
+            "ursula-static-raft-multinode-log-test-{}-{}",
             std::process::id(),
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
@@ -6055,7 +6055,7 @@ mod tests {
         }
 
         let raft_root = std::env::temp_dir().join(format!(
-            "ursula-http-static-raft-durable-cold-test-{}-{}",
+            "ursula-static-raft-durable-cold-test-{}-{}",
             std::process::id(),
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
@@ -6233,7 +6233,7 @@ mod tests {
     #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
     async fn static_grpc_raft_installs_snapshot_for_late_learner_with_core_journals() {
         let raft_root = std::env::temp_dir().join(format!(
-            "ursula-http-static-raft-late-learner-log-test-{}-{}",
+            "ursula-static-raft-late-learner-log-test-{}-{}",
             std::process::id(),
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)

@@ -2,7 +2,7 @@
 
 `scripts/ursula_ec2.py` is a small ops helper for existing EC2 instances. It is
 not a cluster provisioner: it assumes instances, networking, IAM, and the
-`ursula-http` binary already exist. Its job is to make the common static
+`ursula` binary already exist. Its job is to make the common static
 multi-Raft deployment loop reproducible:
 
 - inject a short-lived EC2 Instance Connect SSH key
@@ -22,7 +22,7 @@ initializers, and optional S3 cold storage.
 - SSH access through EC2 Instance Connect for the configured `ssh_user`
 - server instances can reach each other on the configured Ursula port
 - server instances can access the configured S3 bucket when `cold_env` uses S3
-- `ursula-http` is already present and executable at `binary` on every server
+- `ursula` is already present and executable at `binary` on every server
 - optional `perf_compare` is already present and executable on the client host
 
 ## Manifest
@@ -31,7 +31,7 @@ initializers, and optional S3 cold storage.
 {
   "ssh_user": "ec2-user",
   "port": 4491,
-  "binary": "/tmp/ursula-http",
+  "binary": "/tmp/ursula",
   "pid_prefix": "/tmp/ursula",
   "log_prefix": "/tmp/ursula",
   "core_count": 16,
@@ -97,8 +97,8 @@ Start the cluster:
 ```bash
 python3 scripts/ursula_ec2.py --config /path/to/cluster.json upload-binary \
   --target servers \
-  --local ./target/release/ursula-http \
-  --remote /tmp/ursula-http
+  --local ./target/release/ursula \
+  --remote /tmp/ursula
 
 python3 scripts/ursula_ec2.py --config /path/to/cluster.json start
 python3 scripts/ursula_ec2.py --config /path/to/cluster.json wait-ready

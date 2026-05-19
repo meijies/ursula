@@ -16,7 +16,7 @@ ec2-status config:
     python3 scripts/ursula_ec2.py --config {{config}} status
 
 ec2-upload-server config binary:
-    python3 scripts/ursula_ec2.py --config {{config}} upload-binary --target servers --local {{binary}} --remote /tmp/ursula-http
+    python3 scripts/ursula_ec2.py --config {{config}} upload-binary --target servers --local {{binary}} --remote /tmp/ursula
 
 ec2-upload-client config binary:
     python3 scripts/ursula_ec2.py --config {{config}} upload-binary --target client --local {{binary}} --remote /tmp/perf_compare

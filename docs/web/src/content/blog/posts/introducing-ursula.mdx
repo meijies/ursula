@@ -81,7 +81,7 @@ When the two teams compared notes, the primitive was identical. We had both ende
 
 Ursula is at `v0.x`. The protocol surface is the asset we're committing to. The on-disk format and many of the operational details are still moving. Concrete near-term goals tracked in the repository's `docs/migration/` folder:
 
-1. **CPU saturation under `perf_compare`.** The migration target is to drive a node's available cores to full utilization on the [perf_compare write and mixed workloads](https://github.com/opendurability/ursula/blob/main/docs/migration/perf-compare-cpu-saturation.md). The prior implementation (`riverrun`) plateaus at three to four busy cores. Ursula's thread-per-core design exists to break that plateau.
+1. **CPU saturation under `perf_compare`.** The migration target is to drive a node's available cores to full utilization on the [perf_compare write and mixed workloads](https://github.com/tonbo-io/ursula/blob/main/docs/migration/perf-compare-cpu-saturation.md). The prior implementation (`riverrun`) plateaus at three to four busy cores. Ursula's thread-per-core design exists to break that plateau.
 2. **Cold offload off the actor turn.** The read path computes a `StreamReadPlan` under the Raft state-machine lock and then offloads payload materialization (including S3 range reads) to a spawned task, so a slow cold fetch does not block other commands waiting on the same group. This is now landed.
 3. **Actor-purified watcher registry.** SSE watchers live inside the owning group actor, mutated only inside that actor's turn - no `Mutex`, no `.await` while holding any lock. This is now landed.
 4. **Bucket-level CRUD, on-disk format stability, and an explicit `v1.0` surface freeze.** Bucket existence is currently implicit. Bucket `GET` / `DELETE` and stream listing are part of the protocol but not yet implemented in Ursula. The full set of protocol gaps is tracked under `docs/migration/official-conformance.md`.
@@ -90,9 +90,9 @@ We are intentionally publishing the protocol surface and runtime architecture ea
 
 ## Try it
 
-Ursula is at [opendurability/ursula](https://github.com/opendurability/ursula), Apache-2.0. A `git clone` and a `cargo build -p ursula-http` puts a single node on your laptop in minutes. The [quick start](/docs/quick-start) walks through the first few curl commands, and [deploy a cluster](/docs/deploy-cluster) covers the three-voter shape when you're ready.
+Ursula is at [tonbo-io/ursula](https://github.com/tonbo-io/ursula), Apache-2.0. A `git clone` and a `cargo build -p ursula` puts a single node on your laptop in minutes. The [quick start](/docs/quick-start) walks through the first few curl commands, and [deploy a cluster](/docs/deploy-cluster) covers the three-voter shape when you're ready.
 
-If you are running CRDT, agent, or workflow workloads against durable-timeline infrastructure you wish you did not have to maintain, tell us what is in the way. [Open an issue](https://github.com/opendurability/ursula/issues) with the shape of your stack, what is not working in it, and what would have to be true for Ursula to replace the part you are tired of owning. We read every one.
+If you are running CRDT, agent, or workflow workloads against durable-timeline infrastructure you wish you did not have to maintain, tell us what is in the way. [Open an issue](https://github.com/tonbo-io/ursula/issues) with the shape of your stack, what is not working in it, and what would have to be true for Ursula to replace the part you are tired of owning. We read every one.
 
 This is the start of the project, not the end. Come build it with us.
 

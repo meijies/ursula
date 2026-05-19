@@ -31,7 +31,7 @@ function BlogIndexPage() {
           { label: "Benchmark", href: "/benchmark" },
         ]}
         version={__URSULA_VERSION__}
-        githubUrl="https://github.com/opendurability/ursula"
+        githubUrl="https://github.com/tonbo-io/ursula"
       />
 
       <main className="blog-page">

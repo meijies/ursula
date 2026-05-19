@@ -3,14 +3,14 @@ title: Run locally
 description: Start a single-node Ursula server and verify the HTTP API.
 ---
 
-Ursula's HTTP server is the `ursula-http` binary. It takes its configuration from CLI flags and a small set of environment variables - there is no config file yet.
+Ursula's HTTP server is the `ursula` binary. It takes its configuration from CLI flags and a small set of environment variables - there is no config file yet.
 
 ## In-memory (fastest, volatile)
 
 Best for first-impression testing. Nothing is persisted to disk:
 
 ```bash
-cargo run -p ursula-http --bin ursula-http -- \
+cargo run -p ursula --bin ursula -- \
   --listen 127.0.0.1:4437 \
   --core-count 4 \
   --raft-group-count 64 \
@@ -24,7 +24,7 @@ Without `--raft-memory`, `--wal-dir`, or `--raft-log-dir`, Ursula runs an in-pro
 Persistent local storage. Streams survive a restart:
 
 ```bash
-cargo run -p ursula-http --bin ursula-http -- \
+cargo run -p ursula --bin ursula -- \
   --listen 127.0.0.1:4437 \
   --core-count 4 \
   --raft-group-count 64 \

@@ -754,7 +754,7 @@ function BenchmarkPage() {
           { label: "Benchmark", href: "/benchmark", active: true },
         ]}
         version={__URSULA_VERSION__}
-        githubUrl="https://github.com/opendurability/ursula"
+        githubUrl="https://github.com/tonbo-io/ursula"
       />
 
       <main className="benchmark-page">
@@ -1129,7 +1129,7 @@ function BenchmarkPage() {
           <h2>Reproduce</h2>
           <div className="benchmark-code-block">
             <pre>{`# 1. Build the bench client and the Ursula HTTP server
-cargo build --release -p ursula-http -p ursula-bench
+cargo build --release -p ursula -p ursula-bench
 
 # 2. Bring up each backend on identical hardware
 python3 scripts/ursula_ec2.py --config <manifest>.json start

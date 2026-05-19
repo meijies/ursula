@@ -30,7 +30,7 @@ just clippy
 Run the current HTTP prototype:
 
 ```bash
-cargo run -p ursula-http --bin ursula-http -- \
+cargo run -p ursula --bin ursula -- \
   --listen 127.0.0.1:4437 \
   --core-count 8 \
   --raft-group-count 128
@@ -39,7 +39,7 @@ cargo run -p ursula-http --bin ursula-http -- \
 Run the same HTTP prototype with the WAL-backed group engine:
 
 ```bash
-cargo run -p ursula-http --bin ursula-http -- \
+cargo run -p ursula --bin ursula -- \
   --listen 127.0.0.1:4437 \
   --core-count 8 \
   --raft-group-count 128 \
@@ -49,7 +49,7 @@ cargo run -p ursula-http --bin ursula-http -- \
 Run the HTTP prototype through OpenRaft with an in-memory Raft log store:
 
 ```bash
-cargo run -p ursula-http --bin ursula-http -- \
+cargo run -p ursula --bin ursula -- \
   --listen 127.0.0.1:4437 \
   --core-count 8 \
   --raft-group-count 128 \

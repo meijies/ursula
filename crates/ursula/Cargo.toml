@@ -1,11 +1,11 @@
 [package]
-name = "ursula-http"
+name = "ursula"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 authors.workspace = true
 repository.workspace = true
-description = "Minimal HTTP adapter for Ursula vNext runtime experiments."
+description = "Ursula durable-stream server: thread-per-core, multi-Raft, HTTP front door."
 
 [features]
 tokio-console = ["dep:console-subscriber", "tokio/tracing"]
@@ -23,8 +23,8 @@ serde_json = "1.0"
 tokio = { version = "1.39", features = ["io-util", "macros", "net", "rt-multi-thread", "time"] }
 tonic = { version = "0.12", features = ["transport"] }
 tower = { version = "0.5", features = ["util"] }
-ursula-raft = { path = "../ursula-raft" }
-ursula-runtime = { path = "../ursula-runtime" }
-ursula-shard = { path = "../ursula-shard" }
+ursula-raft = { path = "../ursula-raft", version = "0.1.0" }
+ursula-runtime = { path = "../ursula-runtime", version = "0.1.0" }
+ursula-shard = { path = "../ursula-shard", version = "0.1.0" }
 
 [dev-dependencies]

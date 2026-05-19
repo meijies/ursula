@@ -17,7 +17,7 @@ replace the official Durable Streams conformance gate.
   - node 2: `c7g.4xlarge`, `us-east-1b`, private IP `10.99.2.206`
   - node 3: `c7g.4xlarge`, `us-east-1c`, private IP `10.99.3.236`
 - Client node: `c7gn.8xlarge`, `us-east-1a`, private IP `10.99.1.10`
-- Binary: Linux aarch64 `ursula-http`, sha256
+- Binary: Linux aarch64 `ursula`, sha256
   `d48e353915876857d8a6049a202fec64286b8ecf72ce0a9a004a8d6eda1f9c9c`
 - Port: `4477`, separate from the existing long-running Ursula service on
   `4466`
@@ -28,7 +28,7 @@ All three servers ran the same binary with the current tonic gRPC internal Raft
 transport:
 
 ```bash
-/tmp/ursula-http-grpc-current \
+/tmp/ursula-grpc-current \
   --listen 0.0.0.0:4477 \
   --core-count 16 \
   --raft-group-count 64 \
@@ -168,13 +168,13 @@ stopped and the S3 conformance object was deleted.
   - node 2: `c7g.4xlarge`, private IP `10.99.2.206`
   - node 3: `c7g.4xlarge`, private IP `10.99.3.236`
 - Client node: `c7gn.8xlarge`, private IP `10.99.1.10`
-- Binary: Linux aarch64 `ursula-http`, sha256
+- Binary: Linux aarch64 `ursula`, sha256
   `99d29c53ea1b51a52ea4df03df9e87fade99ff1f55eb04c0665bb930f87711b8`
 - Port: `4478`, separate from the existing `4466` service and the earlier
   `4477` smokes.
 
 The binary was built on node 1 from the current Ursula workspace tarball because
-the previous `/tmp/ursula-http-grpc-current` binary did not yet support static
+the previous `/tmp/ursula-grpc-current` binary did not yet support static
 gRPC with `--raft-log-dir`.
 
 ### Server Shape
@@ -183,7 +183,7 @@ All three servers ran with the current tonic gRPC internal Raft transport,
 independent durable OpenRaft log roots, and real S3 cold storage:
 
 ```bash
-/tmp/ursula-http-current-logdir \
+/tmp/ursula-current-logdir \
   --listen 0.0.0.0:4478 \
   --core-count 16 \
   --raft-group-count 64 \
@@ -283,7 +283,7 @@ It is still a short correctness smoke, not a throughput or bounded-memory soak.
   - node 2: `c7g.4xlarge`, private IP `10.99.2.206`
   - node 3: `c7g.4xlarge`, private IP `10.99.3.236`
 - Client node: `c7gn.8xlarge`, private IP `10.99.1.10`
-- Binary: Linux aarch64 `ursula-http`, sha256
+- Binary: Linux aarch64 `ursula`, sha256
   `99d29c53ea1b51a52ea4df03df9e87fade99ff1f55eb04c0665bb930f87711b8`
 - Port: `4480`
 
@@ -293,7 +293,7 @@ Nodes 1 and 2 first ran as a two-voter static gRPC Raft cluster with
 independent durable OpenRaft log roots and real S3 cold storage:
 
 ```bash
-/tmp/ursula-http-current-logdir \
+/tmp/ursula-current-logdir \
   --listen 0.0.0.0:4480 \
   --core-count 16 \
   --raft-group-count 1 \
@@ -402,7 +402,7 @@ long-running bounded-memory/performance soak.
   - node 2: `c7g.4xlarge`, `us-east-1b`, private IP `10.99.2.206`
   - node 3: `c7g.4xlarge`, `us-east-1c`, private IP `10.99.3.236`
 - Client node: `c7gn.8xlarge`, `us-east-1a`, private IP `10.99.1.10`
-- Binary: Linux aarch64 `ursula-http`, sha256
+- Binary: Linux aarch64 `ursula`, sha256
   `b1be43e437a1dd7d07130083025594301065cdbf0e53015fba3f7a3ddaad887f`
 - Port: `4477`, separate from the existing riverrun service port
 
@@ -411,7 +411,7 @@ long-running bounded-memory/performance soak.
 All three servers ran the same binary with:
 
 ```bash
-/tmp/ursula-http-vnext \
+/tmp/ursula-vnext \
   --listen 0.0.0.0:4477 \
   --core-count 16 \
   --raft-group-count 64 \

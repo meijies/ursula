@@ -19,7 +19,7 @@ function DocsPage({ page }: DocsPageProps) {
           { label: "Benchmark", href: "/benchmark" },
         ]}
         version={__URSULA_VERSION__}
-        githubUrl="https://github.com/opendurability/ursula"
+        githubUrl="https://github.com/tonbo-io/ursula"
       />
 
       <DocsLayout activeSlug={page.slug} title={page.title} description={page.description}>

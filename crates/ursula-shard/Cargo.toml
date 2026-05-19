@@ -9,4 +9,4 @@ description = "Shard placement primitives for Ursula's thread-per-core multi-Raf
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
-ursula-proto = { path = "../ursula-proto" }
+ursula-proto = { path = "../ursula-proto", version = "0.1.0" }

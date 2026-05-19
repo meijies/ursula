@@ -74,14 +74,14 @@ Cold backend is selected entirely via `URSULA_COLD_*` env vars. See [Configure S
 | Variable | Purpose |
 | -------- | ------- |
 | `URSULA_TOKIO_CONSOLE` | When set and the binary was built with the `tokio-console` feature, initializes the console subscriber on startup |
-| `RUST_LOG` | Standard tracing filter `ursula_http=info,ursula_runtime=info,ursula_raft=info` is a reasonable baseline |
+| `RUST_LOG` | Standard tracing filter `ursula=info,ursula_runtime=info,ursula_raft=info` is a reasonable baseline |
 
 ## Minimal examples
 
 In-memory single node:
 
 ```bash
-ursula-http \
+ursula \
   --listen 127.0.0.1:4437 \
   --core-count 4 \
   --raft-group-count 64 \
@@ -91,7 +91,7 @@ ursula-http \
 WAL-backed single node:
 
 ```bash
-ursula-http \
+ursula \
   --listen 127.0.0.1:4437 \
   --core-count 4 \
   --raft-group-count 64 \
@@ -104,7 +104,7 @@ Three-node durable cluster (same command on each host, `node_id` from the cluste
 URSULA_COLD_BACKEND=s3 \
 URSULA_COLD_S3_BUCKET=my-ursula-bucket \
 URSULA_COLD_S3_REGION=us-east-1 \
-ursula-http \
+ursula \
   --listen 0.0.0.0:4437 \
   --core-count 16 \
   --raft-group-count 256 \

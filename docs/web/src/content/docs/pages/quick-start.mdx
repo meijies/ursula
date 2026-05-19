@@ -4,10 +4,10 @@ sidebarTitle: Quick Start
 description: Run Ursula locally, create a stream, append data, and subscribe with SSE.
 ---
 
-The Ursula HTTP binary lives in the `ursula-http` crate of the workspace. Start a local node with in-memory Raft (no on-disk state, good for kicking the tires):
+The Ursula HTTP binary lives in the `ursula` crate of the workspace. Start a local node with in-memory Raft (no on-disk state, good for kicking the tires):
 
 ```bash
-cargo run -p ursula-http --bin ursula-http -- \
+cargo run -p ursula --bin ursula -- \
   --listen 127.0.0.1:4437 \
   --core-count 4 \
   --raft-group-count 64 \
@@ -17,7 +17,7 @@ cargo run -p ursula-http --bin ursula-http -- \
 For local WAL-backed persistence instead, point `--wal-dir` at an empty directory:
 
 ```bash
-cargo run -p ursula-http --bin ursula-http -- \
+cargo run -p ursula --bin ursula -- \
   --listen 127.0.0.1:4437 \
   --core-count 4 \
   --raft-group-count 64 \

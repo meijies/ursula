@@ -51,19 +51,22 @@ For static multi-node clusters on EC2, `scripts/ursula_ec2.py` automates the com
 
 ```bash
 # Push a fresh binary to every server in the manifest
-just ec2-upload-server cluster.json ./target/release/ursula-http
+python3 scripts/ursula_ec2.py --config cluster.json upload-binary \
+  --target servers --local ./target/release/ursula --remote /tmp/ursula
 
 # Start the cluster and wait for every Raft group to elect a leader
-just ec2-start cluster.json
+python3 scripts/ursula_ec2.py --config cluster.json start
+python3 scripts/ursula_ec2.py --config cluster.json wait-ready
 
 # Inspect process state and metrics on each node
-just ec2-status cluster.json
+python3 scripts/ursula_ec2.py --config cluster.json status
 
 # Stop the cluster (kills the pid recorded in the configured pid file)
-just ec2-stop cluster.json
+python3 scripts/ursula_ec2.py --config cluster.json stop
 
 # Run perf_compare against the cluster from the configured client host
-just ec2-perf-many cluster.json 4 benchcmp-mp
+python3 scripts/ursula_ec2.py --config cluster.json perf-many \
+  --processes 4 --bucket-prefix benchcmp-mp
 ```
 
 The full manifest shape and command set are documented in `docs/operations/ec2-static-cluster.md` in the repository.
@@ -109,10 +112,10 @@ Plan for a short write-latency spike during the leader restart window. There is 
 
 ## Logs
 
-`RUST_LOG=ursula_http=info,ursula_runtime=info,ursula_raft=info` is the suggested baseline. Bump to `debug` for one of the crates when chasing a specific subsystem:
+`RUST_LOG=ursula=info,ursula_runtime=info,ursula_raft=info` is the suggested baseline. Bump to `debug` for one of the crates when chasing a specific subsystem:
 
 ```bash
-RUST_LOG=ursula_raft=debug ./target/release/ursula-http ...
+RUST_LOG=ursula_raft=debug ./target/release/ursula ...
 ```
 
 `debug` is verbose. Redirect to a file under sustained load.

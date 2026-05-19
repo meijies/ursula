@@ -3,7 +3,7 @@ members = [
     "crates/ursula-proto",
     "crates/ursula-runtime",
     "crates/ursula-raft",
-    "crates/ursula-http",
+    "crates/ursula",
     "crates/ursula-shard",
     "crates/ursula-stream",
     "crates/ursula-bench",
@@ -15,7 +15,7 @@ version = "0.1.0"
 edition = "2024"
 license = "Apache-2.0"
 authors = ["The Ursula contributors"]
-repository = "https://github.com/opendurability/ursula"
+repository = "https://github.com/tonbo-io/ursula"
 keywords = ["durable-streams", "raft", "thread-per-core", "multi-raft"]
 categories = ["database-implementations", "network-programming"]
 

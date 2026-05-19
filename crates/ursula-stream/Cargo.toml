@@ -9,8 +9,8 @@ description = "Pure Durable Streams state-machine semantics for Ursula vNext."
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
-ursula-shard = { path = "../ursula-shard" }
-ursula-proto = { path = "../ursula-proto" }
+ursula-shard = { path = "../ursula-shard", version = "0.1.0" }
+ursula-proto = { path = "../ursula-proto", version = "0.1.0" }
 
 [dev-dependencies]
 serde_json = "1.0"

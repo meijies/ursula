@@ -65,10 +65,10 @@ commands per Raft group and replays them after restart. It is a recovery
 boundary prototype for the new ownership model, not the final OpenRaft log or
 storage layout. HTTP append-batch reaches a group-level append-batch method, so
 the WAL prototype can write a batch of records before one group-local sync.
-`ursula-http --wal-dir DIR` runs the HTTP adapter against this WAL-backed engine
+`ursula --wal-dir DIR` runs the HTTP adapter against this WAL-backed engine
 so perf-shaped HTTP traffic can exercise the recovery path when needed.
 
-`crates/ursula-http` is the first HTTP adapter over this runtime. It covers the
+`crates/ursula` is the first HTTP adapter over this runtime. It covers the
 ordinary `perf_compare` create, post-append, append-batch, catch-up read, HEAD,
 long-poll, SSE live-tail, and stream delete paths, but does not yet cover
 OpenRaft bootstrap orchestration, retention, or OpenRaft snapshot transport.

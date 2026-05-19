@@ -27,7 +27,7 @@ Run it as a single in-memory or WAL-backed node for local development, or as a s
 Start a single in-memory node (fast iteration, no persistence):
 
 ```bash
-cargo run -p ursula-http --bin ursula-http -- \
+cargo run -p ursula --bin ursula -- \
   --listen 127.0.0.1:4437 \
   --core-count 4 \
   --raft-group-count 64 \

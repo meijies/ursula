@@ -4,7 +4,7 @@ use std::net::SocketAddr;
 use std::path::{Path, PathBuf};
 
 use serde::Deserialize;
-use ursula_http::{
+use ursula::{
     router, router_with_static_raft_cluster, spawn_cold_flush_worker_if_configured,
     spawn_default_runtime, spawn_raft_memory_runtime, spawn_raft_runtime,
     spawn_static_grpc_raft_memory_runtime,
@@ -125,7 +125,7 @@ fn init_tokio_console_if_enabled() {
 
     #[cfg(not(feature = "tokio-console"))]
     eprintln!(
-        "URSULA_TOKIO_CONSOLE is set, but ursula-http was built without tokio-console feature"
+        "URSULA_TOKIO_CONSOLE is set, but ursula was built without tokio-console feature"
     );
 }
 
@@ -286,7 +286,7 @@ impl Args {
 }
 
 fn help() -> String {
-    "usage: ursula-http [--listen ADDR] [--core-count N] [--raft-group-count N] [--raft-memory | --wal-dir DIR | --raft-log-dir DIR] [--raft-cluster-config FILE | --raft-node-id ID --raft-peer ID=URL ... --raft-init-membership | --raft-init-membership-per-group]"
+    "usage: ursula [--listen ADDR] [--core-count N] [--raft-group-count N] [--raft-memory | --wal-dir DIR | --raft-log-dir DIR] [--raft-cluster-config FILE | --raft-node-id ID --raft-peer ID=URL ... --raft-init-membership | --raft-init-membership-per-group]"
         .to_owned()
 }
 

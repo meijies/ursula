@@ -146,7 +146,7 @@ the final gate: a real server must still show CPU saturation under
 
 ## Current vNext HTTP Prototype
 
-`crates/ursula-http` can serve the basic Ursula target shape used by
+`crates/ursula` can serve the basic Ursula target shape used by
 `perf_compare`:
 
 - `PUT /benchcmp`
@@ -192,7 +192,7 @@ cargo run -p perf-compare --bin perf_compare -- \
   --setup-concurrency 64
 ```
 
-Against `ursula-http` running with `--core-count 4 --raft-group-count 64`, the
+Against `ursula` running with `--core-count 4 --raft-group-count 64`, the
 smoke produced zero benchmark errors:
 
 - write phase: 83,308 accepted appends, all `204`.
@@ -219,7 +219,7 @@ cargo run --release -p perf-compare --bin perf_compare -- \
   --setup-concurrency 256
 ```
 
-Against release `ursula-http` running with `--core-count 10
+Against release `ursula` running with `--core-count 10
 --raft-group-count 160`, that run produced zero benchmark errors:
 
 - write phase: 4,356,800 successful appends at 870,826.84 req/s.
@@ -236,7 +236,7 @@ A three-node EC2 run on 2026-05-18 exercised the static gRPC multi-Raft shape
 with diskless OpenRaft and memory cold storage:
 
 ```text
-/tmp/ursula-http-current-coalesce \
+/tmp/ursula-current-coalesce \
   --listen 0.0.0.0:4485 \
   --core-count 16 \
   --raft-group-count 64 \
@@ -448,7 +448,7 @@ CPU saturation under a production-grade client harness.
 A release-mode local smoke also validated the OpenRaft in-memory log path:
 
 ```bash
-cargo run --release -p ursula-http --bin ursula-http -- \
+cargo run --release -p ursula --bin ursula -- \
   --listen 127.0.0.1:4457 \
   --core-count 4 \
   --raft-group-count 32 \
@@ -485,7 +485,7 @@ This is a wiring and diskless-mode smoke, not CPU saturation evidence. It proves
 that `perf_compare` can drive the OpenRaft runtime path without local WAL
 persistence.
 
-Two CPU-sampled release runs were then captured with release `ursula-http`
+Two CPU-sampled release runs were then captured with release `ursula`
 running at `--core-count 10 --raft-group-count 160`.
 
 At `--concurrency 256`, `--throughput-secs 10`, and batch appends of 16 frames:
@@ -603,7 +603,7 @@ size completed with zero errors:
 This removes successful-response body generation and client-side JSON decode
 from the measured hot path, but still does not change the CPU gate result.
 
-A raw HTTP/1 diagnostic server was added as `ursula-http-raw`. It implements
+A raw HTTP/1 diagnostic server was added as `ursula-raw`. It implements
 only the `perf_compare` create and append-batch subset over the same
 `ShardRuntime`, bypassing axum/hyper routing and response rendering. With
 `Prefer: return=minimal`, `--concurrency 1024`, `--throughput-secs 10`, and batch
@@ -684,7 +684,7 @@ request rate to about 46k requests/s and did not raise server CPU. For the CPU
 gate, logical append rate alone remains a weak proxy.
 
 The WAL-backed HTTP path was smoke-tested after append-batch started using a
-group-level WAL batch boundary. Release `ursula-http --wal-dir` with
+group-level WAL batch boundary. Release `ursula --wal-dir` with
 `--core-count 10 --raft-group-count 160` and release `perf_compare` with
 `--phases small --concurrency 256 --throughput-secs 5
 --ursula-append-mode batch --ursula-append-batch-size 16` completed with zero
@@ -704,9 +704,9 @@ for its group and lacks OpenRaft log batching, cross-proposal group commit, and
 WAL latency histograms.
 
 The OpenRaft-backed HTTP path was then smoke-tested with the same benchmark
-shape after adding `ursula-http --raft-log-dir` and wiring the OpenRaft file log
+shape after adding `ursula --raft-log-dir` and wiring the OpenRaft file log
 into the existing per-core/per-group durable-log metrics. Release
-`ursula-http --raft-log-dir` with `--core-count 10 --raft-group-count 160` and
+`ursula --raft-log-dir` with `--core-count 10 --raft-group-count 160` and
 release `perf_compare` with `--phases small --concurrency 256
 --throughput-secs 5 --ursula-append-mode batch --ursula-append-batch-size 16
 --ursula-append-batch-minimal-ack` completed with zero errors:
@@ -841,13 +841,13 @@ That passed all 14 `ursula-raft` tests and all 35 `ursula-runtime` tests. The
 release server was then rebuilt:
 
 ```bash
-cargo build --release -p ursula-http
+cargo build --release -p ursula
 ```
 
 The OpenRaft in-memory run used:
 
 ```bash
-target/release/ursula-http \
+target/release/ursula \
   --listen 127.0.0.1:4463 \
   --core-count 10 \
   --raft-group-count 160 \
@@ -915,7 +915,7 @@ build requires Tokio unstable instrumentation:
 
 ```bash
 RUSTFLAGS="--cfg tokio_unstable" \
-  cargo build --release -p ursula-http --features tokio-console
+  cargo build --release -p ursula --features tokio-console
 ```
 
 The profiled server used:
@@ -925,7 +925,7 @@ URSULA_TOKIO_CONSOLE=1 \
 TOKIO_CONSOLE_BIND=127.0.0.1:6670 \
 TOKIO_CONSOLE_RETENTION=60s \
 TOKIO_CONSOLE_PUBLISH_INTERVAL=250ms \
-target/release/ursula-http \
+target/release/ursula \
   --listen 127.0.0.1:4463 \
   --core-count 10 \
   --raft-group-count 160 \
@@ -1001,11 +1001,11 @@ stage metrics.
 append-batch request through `write_commands(vec![...])`. The targeted check:
 
 ```bash
-cargo test -p ursula-raft -p ursula-runtime -p ursula-http
+cargo test -p ursula-raft -p ursula-runtime -p ursula
 ```
 
 passed all 14 `ursula-raft` tests, all 35 `ursula-runtime` tests, and all 16
-`ursula-http` tests. A release `--raft-memory` run with the same 10s
+`ursula` tests. A release `--raft-memory` run with the same 10s
 `perf_compare` shape then completed with zero errors:
 
 - logical append rate: 922,988.66 appends/s.
@@ -1107,7 +1107,7 @@ stream-to-core placement.
 
 After adding `group_mailbox_depth`, `per_group_group_mailbox_depth`,
 `group_mailbox_max_depth`, and `per_group_group_mailbox_max_depth` metrics, the
-OpenRaft in-memory HTTP path was sampled again with release `ursula-http` at
+OpenRaft in-memory HTTP path was sampled again with release `ursula` at
 `--core-count 10 --raft-group-count 160 --raft-memory`.
 
 A single `perf_compare` process at `--concurrency 1024`, `--phases small`,
@@ -1218,7 +1218,7 @@ but it is reached by overfeeding the server and creating queueing/backpressure.
 It is useful as a stress signal, not as the clean final-goal shape.
 
 The raw HTTP diagnostic was then run on EC2 to remove axum/hyper routing from
-the server. A single `perf_compare` process against `ursula-http-raw` produced
+the server. A single `perf_compare` process against `ursula-raw` produced
 9,089,008 logical appends in 15.089s, or 602,372.71 logical appends/s. That is
 the same throughput class as the axum/OpenRaft HTTP server under the same
 client shape, while the raw server used only about 1.39 active cores. Therefore
@@ -1427,7 +1427,7 @@ catch-up `GET` still uses leader-forwarded reads and is not forced to redirect.
 Local evidence after the fix:
 
 ```bash
-cargo test -p ursula-http \
+cargo test -p ursula \
   static_grpc_raft_group_engine_replicates_between_routers -- --nocapture
 ```
 
@@ -1469,14 +1469,14 @@ node metrics after run: live_read_waiters=0, live_read_backpressure_events=0
 ```
 
 ```bash
-cargo test -p ursula-http --all-targets
+cargo test -p ursula --all-targets
 ```
 
 The library and binary tests passed. One `static_cluster_cli` test hit a
 readiness-timeout flake during the full run and passed when rerun directly:
 
 ```bash
-cargo test -p ursula-http --test static_cluster_cli \
+cargo test -p ursula --test static_cluster_cli \
   cli_static_grpc_raft_log_dir_replicates_between_nodes -- --nocapture
 ```
 
@@ -1573,12 +1573,12 @@ Local verification:
 
 ```bash
 cargo fmt --all -- --check
-cargo test -p ursula-http \
+cargo test -p ursula \
   sse_live_tail_delivers_appended_text_and_closed_control -- --nocapture
-cargo test -p ursula-http \
+cargo test -p ursula \
   metrics_expose_per_core_and_group_append_distribution -- --nocapture
-cargo check -p ursula-http --all-targets
-cargo clippy -p ursula-http --all-targets -- -D warnings
+cargo check -p ursula --all-targets
+cargo clippy -p ursula --all-targets -- -D warnings
 ```
 
 All commands passed. The SSE test now verifies one opened SSE stream, one data
@@ -1626,9 +1626,9 @@ Local verification:
 
 ```bash
 cargo fmt --all -- --check
-cargo check -p ursula-http --all-targets
-cargo clippy -p ursula-http --all-targets -- -D warnings
-cargo test -p ursula-http \
+cargo check -p ursula --all-targets
+cargo clippy -p ursula --all-targets -- -D warnings
+cargo test -p ursula \
   static_grpc_raft_group_engine_replicates_between_routers -- --nocapture
 ```
 
@@ -1642,7 +1642,7 @@ wake; this test protects that ownership invariant.
 The fixed Linux aarch64 binary was rebuilt as:
 
 ```text
-57d54d56d1628e66e4fd4a1da10736d18f6129eafba67b8eb64d5cf4d8c6ecac  /tmp/ursula-http-leader-runtime-forward
+57d54d56d1628e66e4fd4a1da10736d18f6129eafba67b8eb64d5cf4d8c6ecac  /tmp/ursula-leader-runtime-forward
 ```
 
 It was deployed to the three `c7g.4xlarge` servers and the `c7gn.8xlarge`
@@ -1827,7 +1827,7 @@ The compared services were not durability-equivalent:
   `s2 lite --bucket ursula-c7g-beast-us-east-1 --path s2-lite-compare-20260518
   --port 8081`, so it used S3 object storage.
 - Ursula three-node static cluster on port `4492`, using the node1-native
-  `ursula-http` binary with sha256
+  `ursula` binary with sha256
   `a9176bade65e258d297959b371f21f4082e752c817cb22dc436365affcbcd050`,
   `--raft-memory`, distributed per-group leaders, and S3 cold storage under
   `ursula-ec2-e2e-20260518-4492`.
@@ -2026,7 +2026,7 @@ cargo test -p ursula-runtime runtime_read_uses_group_read_parts_fast_path -- --n
 cargo test -p ursula-runtime read_materialization_is_bounded_without_blocking_group_actor -- --nocapture
 cargo test -p ursula-runtime notify_read_watchers_shares_identical_reads_across_watchers -- --nocapture
 cargo test -p ursula-raft raft_group_engine_cold_admission_coalesces_append_batch_many_into_one_raft_entry -- --nocapture
-cargo test -p ursula-http static_grpc_raft_durable_cold_flush_replicates_manifest -- --nocapture
+cargo test -p ursula static_grpc_raft_durable_cold_flush_replicates_manifest -- --nocapture
 ```
 
 ## Core Reactor Boundary

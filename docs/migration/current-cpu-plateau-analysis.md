@@ -10,7 +10,7 @@ The current evidence points to architecture-level serialization rather than a
 client-side benchmark ceiling.
 
 The first Ursula vNext release prototype improves distribution and throughput,
-but it has not removed the CPU plateau. With release `ursula-http` running at
+but it has not removed the CPU plateau. With release `ursula` running at
 `--core-count 10 --raft-group-count 160`, CPU-sampled release `perf_compare`
 write/small runs reached every configured core and all 160 groups, but the
 server process still averaged about 4.8 busy cores and peaked below 5.8 busy
@@ -129,7 +129,7 @@ The current vNext prototype is no longer bottlenecked by stream placement:
 benchmark-shaped streams activate all configured shard cores and all configured
 groups. The remaining plateau is therefore a different problem.
 
-Observed with release `ursula-http` at 10 cores and 160 groups:
+Observed with release `ursula` at 10 cores and 160 groups:
 
 - concurrency 256, 10 seconds, batch size 16: write reached 830,280.37 req/s,
   small-event reached 866,320.82 req/s, and server CPU samples averaged 476.5%
@@ -236,7 +236,7 @@ can make the server busy.
 
 EC2 testing on Graviton narrows the boundary further. The setup used one
 `c7gn.8xlarge` client/build host and three `c7g.4xlarge` server hosts, with
-release `ursula-http --core-count 16 --raft-group-count 256 --raft-memory` on
+release `ursula --core-count 16 --raft-group-count 256 --raft-memory` on
 the servers and release `perf_compare` on the client.
 
 First, direct OpenRaft runtime stress on one `c7g.4xlarge`, bypassing HTTP and
@@ -303,7 +303,7 @@ queues instead of measuring a clean steady-state workload.
 
 The raw HTTP diagnostic also rules out axum/hyper routing as the primary
 single-process ceiling. A single `perf_compare` process against
-`ursula-http-raw` reached 9,089,008 logical appends in 15.089s, or 602,372.71
+`ursula-raw` reached 9,089,008 logical appends in 15.089s, or 602,372.71
 logical appends/s, nearly the same request-rate class as the axum/OpenRaft HTTP
 path. The raw server used only about 1.39 active cores. Removing axum/hyper from
 the server therefore lowers server CPU cost but does not let one reqwest-based

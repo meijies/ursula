@@ -104,7 +104,7 @@ def load_config(path: Path) -> ClusterConfig:
         client=client,
         ssh_user=raw.get("ssh_user", "ec2-user"),
         port=int(raw.get("port", 4491)),
-        binary=raw.get("binary", "/tmp/ursula-http"),
+        binary=raw.get("binary", "/tmp/ursula"),
         pid_prefix=raw.get("pid_prefix", "/tmp/ursula"),
         log_prefix=raw.get("log_prefix", "/tmp/ursula"),
         core_count=int(raw.get("core_count", 16)),

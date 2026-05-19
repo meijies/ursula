@@ -13,13 +13,10 @@ Required:
 - a C compiler (for transitive native crates)
 - `pkg-config`
 
-Optional but useful: `just` (recipe runner) for the checked-in shortcuts in `justfile`.
-
 On macOS:
 
 ```bash
 brew install rust pkg-config
-brew install just   # optional
 ```
 
 On Debian or Ubuntu:
@@ -28,39 +25,38 @@ On Debian or Ubuntu:
 sudo apt-get update
 sudo apt-get install -y build-essential pkg-config curl
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-cargo install just   # optional
 ```
 
 ## Clone and build
 
 ```bash
-git clone https://github.com/opendurability/ursula.git
+git clone https://github.com/tonbo-io/ursula.git
 cd ursula
-cargo build --release -p ursula-http --bin ursula-http
+cargo build --release -p ursula --bin ursula
 ```
 
-The resulting binary lives at `target/release/ursula-http` and is what you ship to production hosts.
+The resulting binary lives at `target/release/ursula` and is what you ship to production hosts.
 
-With `just`:
+To work on the whole workspace:
 
 ```bash
-just build    # cargo build --workspace
-just test     # cargo test --workspace
-just clippy   # cargo clippy --workspace --all-targets -- -D warnings
+cargo build --workspace
+cargo test --workspace
+cargo clippy --workspace --all-targets -- -D warnings
 ```
 
-`just build` compiles every crate in the workspace. For just the HTTP server use the `cargo build -p ursula-http` form above.
+`cargo build --workspace` compiles every crate. For just the HTTP server use the `cargo build -p ursula` form above.
 
 ## Verify
 
 ```bash
-./target/release/ursula-http --help
+./target/release/ursula --help
 ```
 
 Should print the supported CLI flags. Then run a short smoke server:
 
 ```bash
-./target/release/ursula-http \
+./target/release/ursula \
   --listen 127.0.0.1:4437 \
   --core-count 2 \
   --raft-group-count 16 \

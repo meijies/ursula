@@ -18,8 +18,8 @@ impl Drop for ChildGuard {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn cli_static_grpc_raft_cluster_forwards_follower_writes() {
-    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula-http") else {
-        eprintln!("CARGO_BIN_EXE_ursula-http is not set; skipping CLI cluster smoke test");
+    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula") else {
+        eprintln!("CARGO_BIN_EXE_ursula is not set; skipping CLI cluster smoke test");
         return;
     };
     let ports = [free_port(), free_port(), free_port()];
@@ -74,8 +74,8 @@ async fn cli_static_grpc_raft_cluster_forwards_follower_writes() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn cli_static_grpc_raft_log_dir_recovers_after_restart() {
-    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula-http") else {
-        eprintln!("CARGO_BIN_EXE_ursula-http is not set; skipping CLI durable restart smoke test");
+    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula") else {
+        eprintln!("CARGO_BIN_EXE_ursula is not set; skipping CLI durable restart smoke test");
         return;
     };
     let port = free_port();
@@ -135,9 +135,9 @@ async fn cli_static_grpc_raft_log_dir_recovers_after_restart() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn cli_static_grpc_raft_log_dir_recovers_cold_manifest_after_restart() {
-    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula-http") else {
+    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula") else {
         eprintln!(
-            "CARGO_BIN_EXE_ursula-http is not set; skipping CLI durable cold restart smoke test"
+            "CARGO_BIN_EXE_ursula is not set; skipping CLI durable cold restart smoke test"
         );
         return;
     };
@@ -219,8 +219,8 @@ async fn cli_static_grpc_raft_log_dir_recovers_cold_manifest_after_restart() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn cli_static_grpc_raft_log_dir_replicates_between_nodes() {
-    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula-http") else {
-        eprintln!("CARGO_BIN_EXE_ursula-http is not set; skipping CLI durable cluster smoke test");
+    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula") else {
+        eprintln!("CARGO_BIN_EXE_ursula is not set; skipping CLI durable cluster smoke test");
         return;
     };
     let ports = [free_port(), free_port(), free_port()];
@@ -305,9 +305,9 @@ async fn cli_static_grpc_raft_log_dir_replicates_between_nodes() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn cli_static_grpc_raft_log_dir_installs_snapshot_for_late_learner() {
-    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula-http") else {
+    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula") else {
         eprintln!(
-            "CARGO_BIN_EXE_ursula-http is not set; skipping CLI durable late learner smoke test"
+            "CARGO_BIN_EXE_ursula is not set; skipping CLI durable late learner smoke test"
         );
         return;
     };
@@ -457,8 +457,8 @@ async fn cli_static_grpc_raft_log_dir_installs_snapshot_for_late_learner() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn cli_static_grpc_raft_log_dir_replicates_cold_manifest() {
-    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula-http") else {
-        eprintln!("CARGO_BIN_EXE_ursula-http is not set; skipping CLI durable cold smoke test");
+    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula") else {
+        eprintln!("CARGO_BIN_EXE_ursula is not set; skipping CLI durable cold smoke test");
         return;
     };
     let ports = [free_port(), free_port(), free_port()];
@@ -583,9 +583,9 @@ async fn cli_static_grpc_raft_log_dir_replicates_cold_manifest() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn cli_static_grpc_raft_log_dir_recovers_replicated_cold_manifest_after_restart() {
-    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula-http") else {
+    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula") else {
         eprintln!(
-            "CARGO_BIN_EXE_ursula-http is not set; skipping CLI durable cold cluster restart smoke test"
+            "CARGO_BIN_EXE_ursula is not set; skipping CLI durable cold cluster restart smoke test"
         );
         return;
     };
@@ -757,9 +757,9 @@ async fn cli_static_grpc_raft_log_dir_recovers_replicated_cold_manifest_after_re
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn cli_static_grpc_raft_log_dir_background_cold_flush_bounds_hot_bytes_during_writes() {
-    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula-http") else {
+    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula") else {
         eprintln!(
-            "CARGO_BIN_EXE_ursula-http is not set; skipping CLI durable cold steady-state test"
+            "CARGO_BIN_EXE_ursula is not set; skipping CLI durable cold steady-state test"
         );
         return;
     };
@@ -925,9 +925,9 @@ async fn cli_static_grpc_raft_log_dir_recovers_replicated_s3_cold_manifest_after
         );
         return;
     }
-    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula-http") else {
+    let Some(binary) = option_env!("CARGO_BIN_EXE_ursula") else {
         eprintln!(
-            "CARGO_BIN_EXE_ursula-http is not set; skipping CLI S3 cold cluster restart smoke test"
+            "CARGO_BIN_EXE_ursula is not set; skipping CLI S3 cold cluster restart smoke test"
         );
         return;
     };
@@ -1125,7 +1125,7 @@ fn spawn_node(
         command.arg("--raft-init-membership");
     }
     ChildGuard {
-        child: command.spawn().expect("spawn ursula-http node"),
+        child: command.spawn().expect("spawn ursula node"),
     }
 }
 
@@ -1153,7 +1153,7 @@ fn spawn_node_with_cluster_config(
         .stdout(Stdio::null())
         .stderr(Stdio::null());
     ChildGuard {
-        child: command.spawn().expect("spawn durable ursula-http node"),
+        child: command.spawn().expect("spawn durable ursula node"),
     }
 }
 
@@ -1185,7 +1185,7 @@ fn spawn_node_with_cluster_config_and_cold_fs(
     ChildGuard {
         child: command
             .spawn()
-            .expect("spawn durable cold ursula-http node"),
+            .expect("spawn durable cold ursula node"),
     }
 }
 
@@ -1224,7 +1224,7 @@ fn spawn_node_with_cluster_config_and_cold_fs_background(
     ChildGuard {
         child: command
             .spawn()
-            .expect("spawn durable background-cold ursula-http node"),
+            .expect("spawn durable background-cold ursula node"),
     }
 }
 
@@ -1273,7 +1273,7 @@ fn spawn_node_with_cluster_config_and_cold_s3(
     ChildGuard {
         child: command
             .spawn()
-            .expect("spawn durable S3 cold ursula-http node"),
+            .expect("spawn durable S3 cold ursula node"),
     }
 }
 

@@ -164,9 +164,9 @@ If hot bytes are growing unbounded with no cold flushes happening, you'll eventu
 
 ## Still stuck?
 
-Open a [GitHub issue](https://github.com/opendurability/ursula/issues) with:
+Open a [GitHub issue](https://github.com/tonbo-io/ursula/issues) with:
 
 - `/__ursula/metrics` output from every node (with timestamps)
 - The CLI flags used to start each node
 - Relevant `URSULA_*` env vars (redact credentials)
-- The last ~200 log lines with `RUST_LOG=ursula_runtime=debug,ursula_raft=debug,ursula_http=info`
+- The last ~200 log lines with `RUST_LOG=ursula_runtime=debug,ursula_raft=debug,ursula=info`

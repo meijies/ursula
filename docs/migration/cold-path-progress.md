@@ -90,7 +90,7 @@ publish; bytes are uploaded before the command is emitted.
   - Cold-aware reads work when the group state machine is created with a cold
     store handle.
 
-- `crates/ursula-http`
+- `crates/ursula`
   - Runtime constructors wire `ColdStore::from_env()` into default, WAL,
     in-memory OpenRaft, and durable OpenRaft modes.
   - Added `POST /__ursula/flush-cold/{bucket}/{stream}` for explicit single
@@ -137,9 +137,9 @@ cargo test -p ursula-runtime flush_cold_group_batch_once_publishes_multiple_chun
 cargo test -p ursula-runtime repeated_cold_flush_keeps_hot_bytes_bounded_while_writes_continue -- --nocapture
 cargo test -p ursula-runtime --lib cold_write_admission -- --nocapture
 cargo test -p ursula-runtime --test s3_cold_path -- --nocapture
-cargo test -p ursula-http --lib metrics_expose_per_core_and_group_append_distribution -- --nocapture
-cargo test -p ursula-http --lib cold_backpressure_returns_service_unavailable_and_metrics -- --nocapture
-cargo test -p ursula-http --lib flush_cold_endpoint_uploads_and_reads_back_segments
+cargo test -p ursula --lib metrics_expose_per_core_and_group_append_distribution -- --nocapture
+cargo test -p ursula --lib cold_backpressure_returns_service_unavailable_and_metrics -- --nocapture
+cargo test -p ursula --lib flush_cold_endpoint_uploads_and_reads_back_segments
 cargo check --workspace --all-targets
 cargo fmt --all -- --check
 cargo test --workspace
@@ -334,7 +334,7 @@ URSULA_COLD_FLUSH_MIN_HOT_BYTES=1 \
 URSULA_COLD_FLUSH_MAX_BYTES=1 \
 URSULA_COLD_FLUSH_MAX_CONCURRENCY=4 \
 URSULA_COLD_MAX_HOT_BYTES_PER_GROUP=67108864 \
-cargo run -p ursula-http --bin ursula-http -- \
+cargo run -p ursula --bin ursula -- \
   --listen 127.0.0.1:4478 \
   --core-count 4 \
   --raft-group-count 32 \
@@ -362,7 +362,7 @@ cold_flush_publishes=15034
 ```
 
 The EC2 static-cluster S3 smoke has now also passed with the current tonic gRPC
-internal Raft transport. It ran the same `ursula-http` binary on three
+internal Raft transport. It ran the same `ursula` binary on three
 `c7g.4xlarge` nodes with a `c7gn.8xlarge` client, used port `4477`, and pointed
 all nodes at `URSULA_COLD_BACKEND=s3` with bucket
 `ursula-c7g-beast-us-east-1`. The smoke verified follower write redirect to
