@@ -299,14 +299,14 @@ const fanoutLatency: Scenario = {
     ],
   },
   annotation:
-    "Ursula stays flat from 50 to 1,000 subscribers at 3.5–6.1 ms p99 - the watcher path is O(unique requests). S2 with S3 backend is flat at ~100 ms (dominated by S3 round-trip on the read side). Durable Streams' file-backed store shows the linear O(N) wake curve, ending at 980 ms p99 at 1,000 subscribers - a 160× gap vs Ursula.",
+    "Ursula stays flat from 50 to 1,000 subscribers at 3.5–6.1 ms p99 - the watcher path is O(unique requests). S2 Lite with S3 backend is flat at ~100 ms (dominated by S3 round-trip on the read side). Durable Streams' file-backed store shows the linear O(N) wake curve, ending at 980 ms p99 at 1,000 subscribers - a 160× gap vs Ursula.",
 };
 
 const replayCompletion: Scenario = {
   key: "replay-completion",
   title: "Catch-up replay - completion rate",
   subtitle:
-    "N clients, each on its own stream pre-filled with 200 events × 1 KiB. Every client asks for the full stream contents. Ursula uses GET /bootstrap (snapshot + tail-since-snapshot); DS and S2 don't have a snapshot endpoint, so each client must read the full log. Y-axis is the share of clients that received valid data inside the 180 s timeout.",
+    "N clients, each on its own stream pre-filled with 200 events × 1 KiB. Every client asks for the full stream contents. Ursula uses GET /bootstrap (snapshot + tail-since-snapshot); DS and S2 Lite don't have a snapshot endpoint, so each client must read the full log. Y-axis is the share of clients that received valid data inside the 180 s timeout.",
   xLabel: "concurrent clients (each on a unique stream)",
   yLabel: "% of clients that successfully replayed",
   yUnit: "%",
@@ -375,7 +375,7 @@ const replayCompletion: Scenario = {
     ],
   },
   annotation:
-    "This is the metric that p99 latency was hiding. Ursula and Durable Streams deliver to every client at every load point we measured; S2 Lite on S3 drops to 97.4% at 500 concurrent replays and to 65.9% at 1,000 - one in three clients never gets the document. The remaining clients on S2 do come back at moderate p99 (380 ms) which made the latency-only chart look competitive, but production users see 341 broken sessions per 1,000 reconnects.",
+    "This is the metric that p99 latency was hiding. Ursula and Durable Streams deliver to every client at every load point we measured; S2 Lite on S3 drops to 97.4% at 500 concurrent replays and to 65.9% at 1,000 - one in three clients never gets the document. The remaining clients on S2 Lite do come back at moderate p99 (380 ms) which made the latency-only chart look competitive, but production users see 341 broken sessions per 1,000 reconnects.",
 };
 
 const replayLatency: Scenario = {
@@ -455,7 +455,7 @@ const replayLatency: Scenario = {
     ],
   },
   annotation:
-    "Ursula's snapshot path keeps the body size smallest (172 KB) and the tail-among-ok latency lowest at 1,000 concurrent clients (471 ms vs DS 828 ms). S2's number looks competitive here but it is only describing the 65.9% of clients that did receive their replay - read this chart together with the completion-rate chart above.",
+    "Ursula's snapshot path keeps the body size smallest (172 KB) and the tail-among-ok latency lowest at 1,000 concurrent clients (471 ms vs DS 828 ms). S2 Lite's number looks competitive here but it is only describing the 65.9% of clients that did receive their replay - read this chart together with the completion-rate chart above.",
 };
 
 // -----------------------------------------------------------------------------
@@ -760,13 +760,11 @@ function BenchmarkPage() {
       <main className="benchmark-page">
         <div className="benchmark-hero">
           <header>
-            <h1>Ursula vs Durable Streams vs S2</h1>
+            <h1>OSS HTTP Streams Benchmark</h1>
             <p className="benchmark-lead">
-              Apples-to-apples runs of the same three real-world workload
-              scenarios against three durable-stream implementations on
-              identical AWS Graviton hardware. The bench client and the three
-              target backends are all driven from one tool (
-              <code>crates/ursula-bench</code>).
+              A focused EC2 comparison of Ursula, Durable Streams, and S2 Lite
+              across multi-stream writes, catch-up replay, and SSE live tail.
+              All backends driven by <code>crates/ursula-bench</code>.
             </p>
           </header>
           <aside className="benchmark-scoreboard" aria-label="Headline gaps">
@@ -781,7 +779,7 @@ function BenchmarkPage() {
                 </div>
                 <div>
                   <b>5.2×</b>
-                  <span>vs S2 (S3)</span>
+                  <span>vs S2 Lite (S3)</span>
                 </div>
               </div>
               <div className="benchmark-score-foot">
@@ -806,7 +804,7 @@ function BenchmarkPage() {
                 </div>
                 <div>
                   <b>18×</b>
-                  <span>vs S2 p99</span>
+                  <span>vs S2 Lite p99</span>
                 </div>
               </div>
               <div className="benchmark-score-foot">
@@ -831,7 +829,7 @@ function BenchmarkPage() {
                 </div>
                 <div>
                   <b>100%</b>
-                  <span>Ursula completion vs 66% on S2</span>
+                  <span>Ursula completion vs 66% on S2 Lite</span>
                 </div>
               </div>
               <div className="benchmark-score-foot">
@@ -841,7 +839,7 @@ function BenchmarkPage() {
                 </div>
                 <div>
                   <b>snapshot</b>
-                  <span>172 KB body vs 200 KB (DS) / 471 KB (S2)</span>
+                  <span>172 KB body vs 200 KB (DS) / 471 KB (S2 Lite)</span>
                 </div>
               </div>
             </article>
@@ -918,7 +916,7 @@ function BenchmarkPage() {
                 <li>1 × c7g.4xlarge, single S2 Lite process</li>
                 <li>s2-cli v0.33.0 (s2-lite)</li>
                 <li>S3 backend (S3 Standard, same region)</li>
-                <li>S2's own API, not Durable Streams protocol</li>
+                <li>S2 Lite's own API, not Durable Streams protocol</li>
               </ul>
             </article>
           </div>
@@ -966,7 +964,7 @@ function BenchmarkPage() {
             its own document. Each client wants "give me the full current state
             of this stream". The mechanism differs by system: Ursula uses{" "}
             <code>/bootstrap</code> which returns a snapshot plus the tail since
-            that snapshot, while DS and S2 must replay the full log because
+            that snapshot, while DS and S2 Lite must replay the full log because
             neither ships a snapshot endpoint. All three answer the same client
             question. Read these two charts together - the first one shows
             whether the system finished at all, the second shows how fast among
@@ -989,22 +987,22 @@ function BenchmarkPage() {
           <ul style={{ color: "#ebdbb2", lineHeight: 1.6, paddingLeft: 20 }}>
             <li>
               <strong>Write throughput</strong> at 500 streams: Ursula 35.2k vs
-              DS 6.0k vs S2 6.8k (5.2–5.9× gap). Multi-Raft puts streams on
+              DS 6.0k vs S2 Lite 6.8k (5.2–5.9× gap). Multi-Raft puts streams on
               different cores and voters in parallel.
             </li>
             <li>
               <strong>SSE fan-out</strong> at 1,000 subscribers: Ursula 6.1 ms
-              p99 vs DS 980 ms (O(N) wake) vs S2 111 ms (S3 floor). 160× / 18×
+              p99 vs DS 980 ms (O(N) wake) vs S2 Lite 111 ms (S3 floor). 160× / 18×
               gaps.
             </li>
             <li>
               <strong>Catch-up replay</strong> at 1,000 clients: completion is
-              the binding metric. Ursula and DS deliver 100%; S2 only 65.9%.
+              the binding metric. Ursula and DS deliver 100%; S2 Lite only 65.9%.
               Ursula's snapshot also keeps the body smallest (172 KB).
             </li>
             <li>
-              <strong>Caveats:</strong> Ursula uses 3 × c7g vs DS / S2's 1 ×
-              c7g (deployment-shape comparison, not per-CPU). S2 production
+              <strong>Caveats:</strong> Ursula uses 3 × c7g vs DS / S2 Lite's 1 ×
+              c7g (deployment-shape comparison, not per-CPU). S2 Lite production
               uses S3 Express which would cut its latency at ~7× the per-GB
               cost.
             </li>
@@ -1017,7 +1015,7 @@ function BenchmarkPage() {
             Throughput and latency are only fair to compare if the durability
             properties are clear. Here is what each system actually guarantees
             in this benchmark's configuration. Ursula pays a quorum round-trip
-            on every commit; S2 pays an S3 PUT; the file-backed Durable Streams
+            on every commit; S2 Lite pays an S3 PUT; the file-backed Durable Streams
             reference fsyncs to a single EBS volume.
           </p>
           <div className="benchmark-table-wrap">
