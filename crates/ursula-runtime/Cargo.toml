@@ -7,7 +7,7 @@ authors.workspace = true
 repository.workspace = true
 homepage.workspace = true
 readme.workspace = true
-description = "Shard-owned actor runtime prototype for Ursula vNext."
+description = "Per-core actor runtime for Ursula: hot ring, cold-tier flush, and the replaceable group-engine boundary."
 
 [dependencies]
 bytes = { version = "1.7", features = ["serde"] }

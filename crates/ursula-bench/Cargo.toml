@@ -7,7 +7,7 @@ authors.workspace = true
 repository.workspace = true
 homepage.workspace = true
 readme.workspace = true
-description = "Benchmark client for Ursula durable streams (perf_compare-style workloads)."
+description = "Benchmark client for Durable Streams servers: drives multi-stream write, SSE fan-out, and catch-up replay workloads against Ursula, the Durable Streams reference, and S2 Lite."
 
 [[bin]]
 name = "ursula-bench"

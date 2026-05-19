@@ -7,7 +7,7 @@ authors.workspace = true
 repository.workspace = true
 homepage.workspace = true
 readme.workspace = true
-description = "Pure Durable Streams state-machine semantics for Ursula vNext."
+description = "Durable Streams state machine for Ursula: bucket and stream commands, events, and offset bookkeeping."
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }

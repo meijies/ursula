@@ -7,7 +7,7 @@ authors.workspace = true
 repository.workspace = true
 homepage.workspace = true
 readme.workspace = true
-description = "Shared protobuf schema types for Ursula durable stream semantics."
+description = "Shared protobuf wire types for Ursula (stream commands, cold chunk refs, Raft RPC payloads)."
 
 [dependencies]
 prost = "0.13"
