@@ -1,0 +1,13 @@
+{{- if gt (int .Values.replicaCount) 1 }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "ursula.fullname" . }}
+  labels:
+    {{- include "ursula.labels" . | nindent 4 }}
+spec:
+  minAvailable: {{ max 1 (div (add (int .Values.replicaCount) 1) 2) }}
+  selector:
+    matchLabels:
+      {{- include "ursula.selectorLabels" . | nindent 6 }}
+{{- end }}

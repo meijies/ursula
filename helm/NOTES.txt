@@ -1,0 +1,15 @@
+Ursula cluster deployed!
+
+1. Wait for all pods to be ready:
+   kubectl get pods -l app.kubernetes.io/name=ursula -l app.kubernetes.io/instance={{ .Release.Name }}
+
+2. Verify cluster readiness with ursulactl (from outside the cluster or via a job):
+   ursulactl wait-ready --config cluster-manifest.json --expected-groups {{ .Values.ursula.raftGroupCount }}
+
+3. Check per-node metrics:
+   kubectl port-forward pod/{{ include "ursula.fullname" . }}-0 4437:{{ .Values.service.port }}
+   curl -s http://localhost:4437/__ursula/metrics | jq
+
+Note: Node 0 ({{ include "ursula.fullname" . }}-0) carries init_membership_per_group.
+If you ever wipe the PVCs and restart the cluster from scratch, the flag will
+re-apply on the first start automatically.

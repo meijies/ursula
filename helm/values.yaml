@@ -1,0 +1,87 @@
+# Ursula cluster size. Default is 3 for a production-style Raft cluster.
+replicaCount: 3
+
+image:
+  repository: ghcr.io/tonbo-io/ursula
+  tag: ""
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+imagePullSecrets: []
+podAnnotations: {}
+podSecurityContext: {}
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+
+service:
+  type: ClusterIP
+  # NOTE: this port must match the port in ursula.listen.
+  port: 4437
+
+resources:
+  limits:
+    cpu: 4000m
+    memory: 8Gi
+  requests:
+    cpu: 2000m
+    memory: 4Gi
+
+# Persistence for raft log directory. Highly recommended for production.
+# PVCs contain Raft logs and cluster membership state. Losing a PVC
+# means losing that node's copy of the distributed state machine.
+persistence:
+  enabled: true
+  storageClass: ""
+  accessModes:
+    - ReadWriteOnce
+  size: 100Gi
+  # Extra annotations on each PVC (e.g. for Velero backup or retention policy).
+  annotations: {}
+  # Retain PVCs when the StatefulSet is scaled down or deleted.
+  # When enabled the chart sets "helm.sh/resource-policy: keep" on each PVC.
+  retain: true
+
+# Cold storage configuration (shared S3 bucket required for multi-node).
+coldStorage:
+  backend: s3
+  s3:
+    bucket: ""
+    region: ""
+    root: ""
+    endpoint: ""
+    accessKeyId: ""
+    secretAccessKey: ""
+
+# Ingress configuration. Disabled by default; enable to expose Ursula HTTP API
+# over a domain name with TLS termination.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: ""
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+    # - secretName: ursula-tls
+    #   hosts:
+    #     - ursula.example.com
+
+# Ursula daemon flags.
+ursula:
+  listen: "0.0.0.0:4437"
+  coreCount: 16
+  raftGroupCount: 256
+  raftLogDir: "/var/lib/ursula/raft"
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

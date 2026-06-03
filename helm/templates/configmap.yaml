@@ -1,0 +1,30 @@
+{{- $fullname := include "ursula.fullname" . }}
+{{- $port := .Values.service.port }}
+{{- $count := int .Values.replicaCount }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ursula.fullname" . }}-scripts
+  labels:
+    {{- include "ursula.labels" . | nindent 4 }}
+data:
+  init-config.sh: |
+    #!/bin/sh
+    set -e
+    HOSTNAME=$(hostname)
+    ORDINAL=${HOSTNAME##*-}
+    NODE_ID=$((ORDINAL + 1))
+
+    mkdir -p /etc/ursula
+
+    cat > /etc/ursula/cluster.json <<EOF
+    {
+      "node_id": $NODE_ID,
+      "init_membership_per_group": $(if [ "$ORDINAL" = "0" ]; then echo "true"; else echo "false"; fi),
+      "peers": [
+{{- range $i := until $count }}
+        {"node_id": {{ add $i 1 }}, "url": "http://{{ $fullname }}-{{ $i }}.{{ $fullname }}-peer:{{ $port }}"}{{ if not (eq (add $i 1) $count) }},{{ end }}
+{{- end }}
+      ]
+    }
+    EOF
