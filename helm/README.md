@@ -12,7 +12,7 @@ Deploy a static-membership 3-node Ursula cluster on Kubernetes.
 
 ```bash
 # Add your image and S3 settings
-helm install ursula ./helm/ursula \
+helm install ursula ./helm \
   --namespace ursula --create-namespace \
   --set image.repository=ghcr.io/tonbo-io/ursula \
   --set image.tag=0.1.3 \
@@ -22,6 +22,19 @@ helm install ursula ./helm/ursula \
   --set coldStorage.s3.accessKeyId=$AWS_ACCESS_KEY_ID \
   --set coldStorage.s3.secretAccessKey=$AWS_SECRET_ACCESS_KEY
 ```
+
+### Local / Minimal 3-Node Cluster
+
+For a resource-constrained local Kubernetes environment, use `helm/values-local.yaml`:
+
+```bash
+docker build -t ursula:local .
+helm install ursula ./helm \
+  --namespace ursula --create-namespace \
+  -f helm/values-local.yaml
+```
+
+This keeps `replicaCount: 3`, requests three `1Gi` PVCs, lowers CPU/memory requests and limits, and uses the in-memory cold-store backend so no S3 bucket is required for local smoke testing.
 
 ## Configuration
 
@@ -45,7 +58,7 @@ helm install ursula ./helm/ursula \
 | `ursula.coreCount` | `--core-count` | `16` |
 | `ursula.raftGroupCount` | `--raft-group-count` | `256` |
 | `ursula.raftLogDir` | Raft log directory | `"/var/lib/ursula/raft"` |
-| `coldStorage.backend` | Cold backend (`s3` or `fs`) | `s3` |
+| `coldStorage.backend` | Cold backend (`s3`, `memory`, or `none`) | `s3` |
 | `coldStorage.s3.bucket` | S3 bucket name | `""` |
 | `coldStorage.s3.region` | S3 region | `""` |
 | `coldStorage.s3.root` | Cold root prefix | `""` |

@@ -1,0 +1,33 @@
+# Minimal-footprint values for a local 3-node Ursula cluster.
+# Use with a locally-built image, for example:
+#   docker build -t ursula:local .
+#   helm install ursula ./helm -n ursula --create-namespace -f helm/values-local.yaml
+
+replicaCount: 3
+
+image:
+  repository: ursula
+  tag: local
+  pullPolicy: IfNotPresent
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+persistence:
+  enabled: true
+  size: 1Gi
+  retain: false
+
+coldStorage:
+  # Local/dev only: keeps cold-object support in memory without requiring S3.
+  backend: memory
+
+ursula:
+  coreCount: 1
+  raftGroupCount: 1
+  raftLogDir: /var/lib/ursula/raft

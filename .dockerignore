@@ -1,0 +1,24 @@
+.git/
+target/
+**/.DS_Store
+**/__pycache__/
+.idea/
+
+# Docs site build artifacts / dependencies
+docs/web/node_modules/
+docs/web/dist/
+docs/web/public/pagefind/
+docs/web/public/docs/
+docs/web/public/llms*.txt
+docs/web/*.tsbuildinfo
+docs/web/vite.config.d.ts
+docs/web/target/
+
+# Cloudflare Pages / Wrangler deploy cache
+.wrangler/
+
+# Local benchmark output
+.bench-results/
+
+# Internal migration / architecture / operations notes
+docs/migration/
